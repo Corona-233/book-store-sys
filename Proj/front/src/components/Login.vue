@@ -14,7 +14,47 @@ export default {
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' }
         ]
-      }
+      },
+      // Mock用户数据
+      mockUser: {
+        id: 1,
+        no: '100001',
+        name: 'Corona',
+        password: '123456',
+        age: 18,
+        sex: 1,
+        phone: '12345678',
+        role_id: 0,
+        isValid: 'Y'
+      },
+      // Mock菜单数据
+      mockMenu: [
+        {
+          menuname: '首页',
+          menuclick: 'Home',
+          menucomponent: 'Home'
+        },
+        {
+          menuname: '用户管理',
+          menuclick: 'user/UserManage',
+          menucomponent: 'user/UserManage'
+        },
+        {
+          menuname: '商品管理',
+          menuclick: 'goods/GoodsManage',
+          menucomponent: 'goods/GoodsManage'
+        },
+        {
+          menuname: '商品分类管理',
+          menuclick: 'goodstype/GoodstypeManage',
+          menucomponent: 'goodstype/GoodstypeManage'
+        },
+        {
+          menuname: '库存管理',
+          menuclick: 'storage/StorageManage',
+          menucomponent: 'storage/StorageManage'
+        }
+      ]
     }
   },
   methods: {
@@ -22,26 +62,44 @@ export default {
       this.confirm_disabled = true;
       this.$refs.loginForm.validate((valid)=>{
         if (valid) {
-          this.$axios.post("http://localhost:8090/user/login", this.loginForm).then(res=>res.data).then(res=>{
-            if(res.code==200){
-              //存储
-              sessionStorage.setItem("CurUser",JSON.stringify(res.data.user))
-              console.log(res.data.menu)
-              this.$store.commit("setMenu",res.data.menu)
-
-              //跳转到主页
-              this.$router.replace('/Index');
-            }else{
-              this.confirm_disabled=false;
-              alert('用户名或密码错误！');
-              return false;
-            }
-          });
+          // 使用mock数据验证登录
+          this.mockLogin();
         }else{
-          this.confirm_disabled=flase;
+          this.confirm_disabled = false;
           return false;
         }
       });
+    },
+    
+    // Mock登录方法
+    mockLogin() {
+      // 模拟网络延迟
+        // 验证用户名和密码
+      if (this.loginForm.no === this.mockUser.no && this.loginForm.password === this.mockUser.password) {
+        // 登录成功
+        const mockResponse = {
+          code: 200,
+          data: {
+            user: this.mockUser,
+            menu: this.mockMenu
+          }
+        };
+          
+        // 存储用户信息
+        sessionStorage.setItem("CurUser", JSON.stringify(mockResponse.data.user));
+        console.log('Mock登录成功，用户信息:', mockResponse.data.user);
+        console.log('Mock菜单数据:', mockResponse.data.menu);
+          
+        // 存储菜单到store
+        this.$store.commit("setMenu", mockResponse.data.menu);
+          
+        // 跳转到主页
+        this.$router.replace('/Index');
+      } else {
+        // 登录失败
+        this.confirm_disabled = false;
+        alert('用户名或密码错误！');
+      }
     }
   }
 }
