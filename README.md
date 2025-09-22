@@ -1,2 +1,2 @@
-# Bookstore-system / 书店进销存管理系统
+# 接口约定
 
