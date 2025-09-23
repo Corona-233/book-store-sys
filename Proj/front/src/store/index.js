@@ -8,7 +8,8 @@ function addNewRoute(menuList) {
     console.log(menuList)
     let routes = router.options.routes
     console.log(routes)
-    routes.forEach(routeItem=>{//forEach循环每一条
+    //forEach循环每一条
+    routes.forEach(routeItem=>{
         if(routeItem.path=="/Index"){
             menuList.forEach(menu=>{
                 let childRoute =  {
@@ -30,15 +31,18 @@ function addNewRoute(menuList) {
 }
 
 export default new Vuex.Store({
+    //定义全局属性
     state: {
         menu: []
     },
+    //存放同步方法
     mutations: {
         setMenu(state,menuList) {
             state.menu = menuList
             addNewRoute(menuList)
         }
     },
+    //对state的数进行计算
     getters: {
         getMenu(state) {
             return state.menu

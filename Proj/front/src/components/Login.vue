@@ -1,4 +1,6 @@
 <script>
+import { userApi } from '@/api/user'
+
 export default {
   name: "Login",
   data(){
@@ -22,7 +24,7 @@ export default {
       this.confirm_disabled = true;
       this.$refs.loginForm.validate((valid)=>{
         if (valid) {
-          this.$axios.post("http://localhost:8090/user/login", this.loginForm).then(res=>res.data).then(res=>{
+          userApi.login(this.loginForm).then(res=>{
             if(res.code==200){
               //存储
               sessionStorage.setItem("CurUser",JSON.stringify(res.data.user))

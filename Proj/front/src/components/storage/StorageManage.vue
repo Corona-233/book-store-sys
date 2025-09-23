@@ -1,4 +1,6 @@
 <script>
+import { storageApi } from '@/api/storage'
+
 export default {
   name: "StorageManage",
   data() {
@@ -34,13 +36,13 @@ export default {
       this.loadPost()
     },
     loadPost(){
-      this.$axios.post('http://localhost:8090/storage/listPage',{
+      storageApi.listPage({
         pageSize: this.pageSize,
         pageNum: this.pageNum,
         param: {
           name: this.name,
         }
-      }).then(res=>res.data).then(res=>{
+      }).then(res=>{
         console.log(res)
         if(res.code==200){
           this.tableData=res.data
@@ -83,7 +85,7 @@ export default {
 
     },
     doMod(){
-      this.$axios.post('http://localhost:8090/storage/update',this.form).then(res=>res.data).then(res=>{
+      storageApi.update(this.form).then(res=>{
         if(res.code==200){
           this.$message({
             message: '修改成功！',
@@ -101,7 +103,7 @@ export default {
       })
     },
     doSave(){
-      this.$axios.post('http://localhost:8090/storage/save',this.form).then(res=>res.data).then(res=>{
+      storageApi.save(this.form).then(res=>{
         if(res.code==200){
           this.$message({
             message: '添加成功！',
@@ -119,7 +121,7 @@ export default {
       })
     },
     del(id){
-      this.$axios.get('http://localhost:8090/storage/del?id='+id).then(res=>res.data).then(res=>{
+      storageApi.delete(id).then(res=>{
         if(res.code==200){
           this.$message({
             message: '删除成功！',

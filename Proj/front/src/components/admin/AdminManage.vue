@@ -1,4 +1,6 @@
 <script>
+import { adminApi } from '@/api/admin'
+
 export default {
   name: "AdminManage",
   data() {
@@ -6,7 +8,7 @@ export default {
       if(this.form.id){
         return callback();
       }
-      this.$axios.get("http://localhost:8090/user/findByNo?no="+this.form.no).then(res=>res.data).then(res=>{
+      adminApi.findByNo(this.form.no).then(res=>{
         if(res.code != 200){
           callback()
         }else{
@@ -71,7 +73,7 @@ export default {
       this.loadPost()
     },
     loadPost(){
-      this.$axios.post('http://localhost:8090/user/listPage',{
+      adminApi.listPage({
         pageSize: this.pageSize,
         pageNum: this.pageNum,
         param: {
@@ -79,7 +81,7 @@ export default {
           sex: this.sex,
           roleId: '1'
         }
-      }).then(res=>res.data).then(res=>{
+      }).then(res=>{
         console.log(res)
         if(res.code==200){
           this.tableData=res.data
@@ -127,7 +129,7 @@ export default {
 
     },
     doMod(){
-      this.$axios.post('http://localhost:8090/user/update',this.form).then(res=>res.data).then(res=>{
+      adminApi.update(this.form).then(res=>{
         if(res.code==200){
           this.$message({
             message: '修改成功！',
@@ -145,7 +147,7 @@ export default {
       })
     },
     doSave(){
-      this.$axios.post('http://localhost:8090/user/save',this.form).then(res=>res.data).then(res=>{
+      adminApi.save(this.form).then(res=>{
         if(res.code==200){
           this.$message({
             message: '添加成功！',
@@ -163,7 +165,7 @@ export default {
       })
     },
     del(id){
-      this.$axios.get('http://localhost:8090/user/del?id='+id).then(res=>res.data).then(res=>{
+      adminApi.delete(id).then(res=>{
         if(res.code==200){
           this.$message({
             message: '删除成功！',

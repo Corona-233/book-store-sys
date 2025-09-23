@@ -1,4 +1,6 @@
 <script>
+import { goodsApi } from '@/api/goods'
+
 export default {
   name: "GoodsManage",
   data() {
@@ -52,7 +54,7 @@ export default {
     },
     //查询
     loadPost(){
-      this.$axios.post('http://localhost:8090/goods/listPage',{
+      goodsApi.listPage({
         pageSize: this.pageSize,
         pageNum: this.pageNum,
         param: {
@@ -60,7 +62,7 @@ export default {
           storage: this.storage+'',
           goodstype: this.goodstype+''
         }
-      }).then(res=>res.data).then(res=>{
+      }).then(res=>{
         console.log(res)
         if(res.code==200){
           this.tableData=res.data
@@ -108,7 +110,7 @@ export default {
 
     },
     doMod(){
-      this.$axios.post('http://localhost:8090/goods/update',this.form).then(res=>res.data).then(res=>{
+      goodsApi.update(this.form).then(res=>{
         if(res.code==200){
           this.$message({
             message: '修改成功！',
@@ -126,7 +128,7 @@ export default {
       })
     },
     doSave(){
-      this.$axios.post('http://localhost:8090/goods/save',this.form).then(res=>res.data).then(res=>{
+      goodsApi.save(this.form).then(res=>{
         if(res.code==200){
           this.$message({
             message: '添加成功！',
@@ -144,7 +146,7 @@ export default {
       })
     },
     del(id){
-      this.$axios.get('http://localhost:8090/goods/del?id='+id).then(res=>res.data).then(res=>{
+      goodsApi.delete(id).then(res=>{
         if(res.code==200){
           this.$message({
             message: '删除成功！',
@@ -163,7 +165,7 @@ export default {
       this.$refs.form.resetFields();
     },
     loadStorage(){
-      this.$axios.get('http://localhost:8090/storage/list').then(res=>res.data).then(res=>{
+      goodsApi.getStorageList().then(res=>{
         console.log(res)
         if(res.code==200){
           this.storageData=res.data
@@ -173,7 +175,7 @@ export default {
       })
     },
     loadGoodstype(){
-      this.$axios.get('http://localhost:8090/goodstype/list').then(res=>res.data).then(res=>{
+      goodsApi.getGoodsTypeList().then(res=>{
         console.log(res)
         if(res.code==200){
           this.goodstypeData=res.data
