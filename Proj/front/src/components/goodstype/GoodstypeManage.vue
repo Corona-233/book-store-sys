@@ -162,8 +162,6 @@ export default {
               :header-cell-style="{background:'rgb(186,204,238)',color:'rgba(0,0,0,0.6)'}"
               border
     >
-      <el-table-column prop="id" label="ID" width="100">
-      </el-table-column>
       <el-table-column prop="name" label="类型名" width="300">
       </el-table-column>
       <el-table-column prop="remark" label="备注">

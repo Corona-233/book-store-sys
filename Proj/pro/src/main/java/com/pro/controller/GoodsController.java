@@ -7,10 +7,16 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pro.common.QueryPageParam;
 import com.pro.common.Result;
 import com.pro.entity.Goods;
+import com.pro.entity.Goodstype;
 import com.pro.service.GoodsService;
+import com.pro.service.GoodstypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -18,6 +24,9 @@ import java.util.HashMap;
 public class GoodsController {
     @Autowired
     private GoodsService goodsService;
+
+    @Autowired
+    private GoodstypeService goodstypeService;
 
     //新增
     @PostMapping("/save")
@@ -67,5 +76,52 @@ public class GoodsController {
         IPage result = goodsService.page(page,lambdaQueryWrapper);
 
         return Result.suc(result.getTotal(),result.getRecords());
+    }
+
+    // 获取商品名称建议
+    @GetMapping("/nameSuggestions")
+    public Result getNameSuggestions(@RequestParam String keyword){
+        if(StringUtils.isBlank(keyword)){
+            return Result.suc(new ArrayList<>());
+        }
+        
+        // 查询包含关键词的商品名称
+        List<Goods> goodsList = goodsService.lambdaQuery()
+            .like(Goods::getName, keyword)
+            .select(Goods::getName)
+            .list();
+        
+        // 提取商品名称并去重
+        List<String> nameList = goodsList.stream()
+            .map(Goods::getName)
+            .distinct()
+            .collect(Collectors.toList());
+        
+        return Result.suc(nameList);
+    }
+
+    // 获取商品类型映射关系
+    @GetMapping("/typeMapping")
+    public Result getTypeMapping(){
+        // 查询所有商品及其类型
+        List<Goods> goodsList = goodsService.list();
+        
+        // 查询所有商品类型
+        List<Goodstype> goodstypeList = goodstypeService.list();
+        Map<Integer, String> typeIdToNameMap = goodstypeList.stream()
+            .collect(Collectors.toMap(Goodstype::getId, Goodstype::getName));
+        
+        // 构建商品名称到类型的映射
+        Map<String, String> mapping = new HashMap<>();
+        for(Goods goods : goodsList){
+            if(StringUtils.isNotBlank(goods.getName()) && goods.getGoodstype() != null){
+                String typeName = typeIdToNameMap.get(goods.getGoodstype());
+                if(StringUtils.isNotBlank(typeName)){
+                    mapping.put(goods.getName(), typeName);
+                }
+            }
+        }
+        
+        return Result.suc(mapping);
     }
 }

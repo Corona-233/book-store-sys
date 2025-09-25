@@ -214,8 +214,6 @@ export default {
               :header-cell-style="{background:'rgb(186,204,238)',color:'rgba(0,0,0,0.6)'}"
               border
     >
-      <el-table-column prop="id" label="ID" width="40">
-      </el-table-column>
       <el-table-column prop="no" label="帐号" width="150">
       </el-table-column>
       <el-table-column prop="name" label="姓名" width="150">

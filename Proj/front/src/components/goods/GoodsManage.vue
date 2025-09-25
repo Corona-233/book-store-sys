@@ -25,10 +25,10 @@ export default {
       },
       rules: {
         name: [
-          {required: true, message: '请输入书籍名', trigger: 'blur'}
+          {required: true, message: '请输入服装名', trigger: 'blur'}
         ],
         storage: [
-          {required: true, message: '请输入书库名', trigger: 'blur'}
+          {required: true, message: '请输入仓库名', trigger: 'blur'}
         ],
         goodstype: [
           {required: true, message: '请输入类型名', trigger: 'blur'}
@@ -184,7 +184,7 @@ export default {
         }
       })
     },
-    //对应书库
+    //对应仓库
     formatStorage(row){
       let t = this.storageData.find(item=>{
         return item.id == row.storage
@@ -211,11 +211,11 @@ export default {
   <div>
     <div style="text-align: center; margin-bottom: 5px">
       <el-input v-model="name"
-                placeholder="请输入书籍名"
+                placeholder="请输入服装名"
                 suffix-icon="el-icon-search"
                 style="width: 200px"
                 @keyup.enter.native="loadPost"></el-input>
-      <el-select v-model="storage" placeholder="请选择书库">
+      <el-select v-model="storage" placeholder="请选择仓库">
         <el-option
             v-for="item in storageData"
             :key="item.id"
@@ -239,11 +239,9 @@ export default {
               :header-cell-style="{background:'rgb(186,204,238)',color:'rgba(0,0,0,0.6)'}"
               border
     >
-      <el-table-column prop="id" label="ID" width="100">
+      <el-table-column prop="name" label="服装名" width="200">
       </el-table-column>
-      <el-table-column prop="name" label="书籍名" width="200">
-      </el-table-column>
-      <el-table-column prop="storage" label="书库" width="100" :formatter="formatStorage">
+      <el-table-column prop="storage" label="仓库" width="100" :formatter="formatStorage">
       </el-table-column>
       <el-table-column prop="goodstype" label="类型" width="200" :formatter="formatGoodsType">
       </el-table-column>
@@ -280,14 +278,14 @@ export default {
         width="30%"
         center>
       <el-form ref="form" :rules="rules" :model="form" label-width="80px">
-        <el-form-item label="书籍名" prop="name">
+        <el-form-item label="服装名" prop="name">
           <el-col :span="18">
             <el-input v-model="form.name"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="书库" prop="storage">
+        <el-form-item label="仓库" prop="storage">
           <el-col :span="18">
-            <el-select v-model="form.storage" placeholder="请选择书库">
+            <el-select v-model="form.storage" placeholder="请选择仓库">
               <el-option
                   v-for="item in storageData"
                   :key="item.id"
